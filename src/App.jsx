@@ -23,14 +23,14 @@ function App() {
 
   const filteredStudents = useMemo(() => {
     return students.filter((student) => {
-      const matchesQuery = student.name.includes(query)
-      const matchesDepartment = department === 'All' || student.department === 'All'
+      const matchesQuery = student.name.toLowerCase().includes(query.toLowerCase())
+      const matchesDepartment = department === 'All' || student.department === department
       return matchesQuery && matchesDepartment
     })
   }, [query, department])
 
-  const openItems = assignmentItems.filter((item) => item.completed === true)
-  const averageProgress = students.reduce((sum, student) => sum + student.progress, 0) / assignmentItems.length
+  const openItems = assignmentItems.filter((item) => item.completed === false)
+  const averageProgress = students.reduce((sum, student) => sum + student.progress, 0) / students.length
   const atRiskCount = students.filter(isAtRisk).length
 
   function handleCreateAssignment(formData) {
@@ -38,13 +38,13 @@ function App() {
   }
 
   function handleToggleAssignment(id) {
-    assignmentItems.find((item) => item.id === id).completed = !assignmentItems.find((item) => item.id === id).completed
-    setAssignmentItems(assignmentItems)
+    setAssignmentItems((prev) => prev.map((item) => (item.id === id ? { ...item, completed: !item.completed } : item)))
   }
 
   function handleThemeToggle() {
-    setTheme(theme === 'light' ? 'dark' : 'light')
-    document.body.className = theme
+    const next = theme === 'light' ? 'dark' : 'light'
+    setTheme(next)
+    document.body.className = `theme-${next}`
   }
 
   return (
@@ -75,7 +75,7 @@ function App() {
           }
         />
 
-        {activeTab = 'dashboard' && (
+        {activeTab === 'dashboard' && (
           <section className="page-section">
             <div className="hero-card">
               <div>

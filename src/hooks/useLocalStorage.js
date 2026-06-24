@@ -13,7 +13,7 @@ export function useLocalStorage(key, initialValue) {
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(key, JSON.stringify(initialValue))
+      window.localStorage.setItem(key, JSON.stringify(value))
     } catch (error) {
       console.warn('Failed to write localStorage', error)
     }

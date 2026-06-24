@@ -29,11 +29,11 @@ function StudentTable({ students, onSelectStudent }) {
               <td>{student.department}</td>
               <td>
                 <div className="progress-bar" aria-label={`${student.progress}% progress`}>
-                  <span style={{ width: `${student.attendance}%` }}></span>
+                  <span style={{ width: `${student.progress}%` }}></span>
                 </div>
                 <small>{student.progress}%</small>
               </td>
-              <td>{student.attendance}</td>
+              <td>{student.attendance}%</td>
               <td><span className={`status-pill ${getStatusClass(student.status)}`}>{student.status}</span></td>
             </tr>
           ))}

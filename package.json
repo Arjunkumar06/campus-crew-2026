@@ -5,14 +5,16 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "dev": "vite",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
+    "lucide-react": "latest",
     "react": "latest",
-    "lucide-react": "latest"
+    "react-dom": "^19.2.7",
+    "vite": "latest"
   },
   "devDependencies": {
     "eslint": "latest",
