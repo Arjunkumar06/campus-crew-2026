@@ -17,7 +17,7 @@ export function useLocalStorage(key, initialValue) {
     } catch (error) {
       console.warn('Failed to write localStorage', error)
     }
-  }, [key, initialValue])
+  }, [key, value])
 
   return [value, setValue]
 }

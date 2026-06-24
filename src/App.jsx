@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Bell, CalendarDays, GraduationCap, Menu, Moon, Search, Sun, X } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Bell, CalendarDays, GraduationCap, Moon, Search, Sun } from 'lucide-react'
 import { announcements, assignments as assignmentSeed, metrics, students } from './data/mockData'
 import { ACADEMIC_TERM_LABEL, CURRENT_FACULTY_USER, REVIEW_STAGE_LABELS, isAtRisk } from './data/canaries'
 import { useLocalStorage } from './hooks/useLocalStorage'
@@ -22,8 +22,9 @@ function App() {
   const [assignmentItems, setAssignmentItems] = useState(assignmentSeed)
 
   const filteredStudents = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase()
     return students.filter((student) => {
-      const matchesQuery = student.name.toLowerCase().includes(query.toLowerCase())
+      const matchesQuery = student.name.toLowerCase().includes(normalizedQuery)
       const matchesDepartment = department === 'All' || student.department === department
       return matchesQuery && matchesDepartment
     })
@@ -41,20 +42,29 @@ function App() {
     setAssignmentItems((prev) => prev.map((item) => (item.id === id ? { ...item, completed: !item.completed } : item)))
   }
 
+  function handleTabChange(tab) {
+    setActiveTab(tab)
+    setSidebarOpen(false)
+  }
+
   function handleThemeToggle() {
     const next = theme === 'light' ? 'dark' : 'light'
     setTheme(next)
-    document.body.className = `theme-${next}`
   }
+
+  useEffect(() => {
+    document.body.className = `theme-${theme}`
+  }, [theme])
 
   return (
     <div className={`app-shell theme-${theme}`}>
       <Sidebar
         isOpen={sidebarOpen}
         activeTab={activeTab}
-        onChangeTab={setActiveTab}
+        onChangeTab={handleTabChange}
         onClose={() => setSidebarOpen(false)}
       />
+      {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-hidden="true" />}
 
       <main className="main-content">
         <Header
@@ -115,11 +125,12 @@ function App() {
                       <Search size={16} />
                       <input
                         placeholder="Search students"
+                        aria-label="Search students"
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                       />
                     </label>
-                    <select value={department} onChange={(event) => setDepartment(event.target.value)}>
+                    <select aria-label="Filter by department" value={department} onChange={(event) => setDepartment(event.target.value)}>
                       <option>All</option>
                       <option>Computer Science</option>
                       <option>Information Technology</option>

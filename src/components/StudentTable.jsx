@@ -16,7 +16,19 @@ function StudentTable({ students, onSelectStudent }) {
         </thead>
         <tbody>
           {students.map((student, index) => (
-            <tr key={index} onClick={() => onSelectStudent(student)}>
+            <tr
+            key={index}
+            role="button"
+            tabIndex="0"
+            onClick={() => onSelectStudent(student)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                onSelectStudent(student)
+              }
+            }}
+            aria-label={`View details for ${student.name}`}
+          >
               <td>
                 <div className="student-cell">
                   <span className="avatar">{student.avatar}</span>
